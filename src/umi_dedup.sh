@@ -16,5 +16,5 @@ docker run \
     quay.io/biocontainers/umi_tools:1.1.4--py38hbff2b2d_1 \
     umi_tools dedup \
         -I /opt/result/$bam \
-        --output_stats=/opt/result/$output_dir/${bam/.bam/dedup} \
-        -S /opt/result/$output_dir/${bam/.bam/_dedup.bam}
+        --output-stats=/opt/result/$output_dir/$(basename ${bam/.bam/dedup}) \
+        -S /opt/result/$output_dir/$(basename ${bam/.bam/_dedup.bam})

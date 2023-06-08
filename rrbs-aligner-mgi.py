@@ -113,7 +113,7 @@ class RRBS_analysis:
         docker_inputs = [r1_trim_ilmn, r2_trim_ilmn]
         result_trim_diverse = subprocess.run(bash_script + mount_directories + docker_inputs)
         if result_trim_diverse.returncode != 0:
-            sys.exit('\tFailed step2a: trimming diversity sequence')
+            sys.exit('\tFailed step2b: trimming diversity sequence')
         # create_new attributes for the class
         self.r1_trimmed = self.__rename_file(step_2_output, r1_trim_ilmn, '_trimmed.fq')
         self.r2_trimmed = self.__rename_file(step_2_output, r2_trim_ilmn, '_trimmed.fq')
@@ -157,8 +157,8 @@ class RRBS_analysis:
         step_4_output = 's4_umi_extract'
         os.makedirs(self.result_path + '/' + step_4_output, exist_ok=True)
         # create attributes to feed into command
-        self.r1_umi_extract = self.__rename(step_4_output, self.r1_umi, '_umi-extract.fq')
-        self.r2_umi_extract = self.__rename(step_4_output, self.r1_umi, '_umi-extract.fq')
+        self.r1_umi_extract = self.__rename_file(step_4_output, self.r1_umi, '_umi-extract.fq')
+        self.r2_umi_extract = self.__rename_file(step_4_output, self.r2_trimmed, '_umi-extract.fq')
         # run umi extract now
         bash_script = ['bash', self.pipeline_path + '/src/umi_extract.sh']
         mount_directories = [self.result_path]
@@ -181,7 +181,7 @@ class RRBS_analysis:
         """
         print('Starting step 5: align with bismark')
         step_5_output = 's5_bismark_align'
-        os.makedirs(self.result_path + '/' + step_5_output)
+        os.makedirs(self.result_path + '/' + step_5_output, exist_ok=True)
         # run bismark alignment
         print('\tStarting step 5a: alignment')
         bash_script = ['bash', self.pipeline_path + '/src/bismark_align.sh']
@@ -190,7 +190,7 @@ class RRBS_analysis:
         result = subprocess.run(bash_script + mount_directories + docker_inputs)
         if result.returncode != 0:
             sys.exit('\tFailed step 5a: align with bismark')
-        bam = self.__rename_file(step_5_output, self.r1_umi_extract, '_bismark_bt2_PE.bam')
+        bam = self.__rename_file(step_5_output, self.r1_umi_extract, '_bismark_bt2_pe.bam')
         # run samtools sort
         print('\tStarting step 5b: sort bam file')
         bash_script = ['bash', self.pipeline_path + '/src/samtools_sort.sh']
@@ -199,7 +199,7 @@ class RRBS_analysis:
         result = subprocess.run(bash_script + mount_directories + docker_inputs)
         if result.returncode != 0:
             sys.exit('\tFailed step 5b: sort bam file')
-        self.bam_sorted = self.__rename_file(step_5_output, bam, '_sorted.bam')
+        self.bam_sorted = self.__rename_file(step_5_output, bam, '_sort.bam')
         # run samtools index
         print('\tStarting step 5c: index bam file')
         bash_script = ['bash', self.pipeline_path + '/src/samtools_index.sh']
@@ -220,7 +220,7 @@ class RRBS_analysis:
         """
         print('Starting step 6: deduplicate')
         step_6_output = 's6_deduplicate_bam'
-        os.makedirs(self.result_path + '/' + step_6_output)
+        os.makedirs(self.result_path + '/' + step_6_output, exist_ok=True)
         # run deduplication
         bash_script = ['bash', self.pipeline_path + '/src/umi_dedup.sh']
         mount_directories = [self.result_path]

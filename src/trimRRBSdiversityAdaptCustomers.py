@@ -17,7 +17,9 @@ The trimmed files will be named for the original files + "_trimmed.fq".
 
 
 
-VERSION: $Revision: 1.11 $
+VERSION: $Revision: 1.12 $
+This version is different from 1.11 in the github in that it allows for
+the /1 and /2 read names in paired end reads
 
 """
 
@@ -413,7 +415,7 @@ for i in range(len(fwdFiles)):
         revTitle = revSeq = revQual = None
         outRev = None
 
-    if revFilenames and fwdTitle.split()[0] != revTitle.split()[0]:
+    if revFilenames and fwdTitle.split()[0][:-2] != revTitle.split()[0][:-2]:
         print "The fwd title and rev title don't match"
         print "fwd title: '%s'" % (fwdTitle.split()[0])
         print "rev title: '%s'" % (revTitle.split()[0])

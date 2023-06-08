@@ -15,7 +15,7 @@ docker run \
     -v $reads_path:/opt/reads \
     -v $result_path:/opt/result \
     dukegcb/trim-galore:0.4.4 \
-    trimgalore \
+    trim_galore \
         -a AGATCGGAAGAGC \
         -a2 AGATCGGAAGAGC \
         --paired \

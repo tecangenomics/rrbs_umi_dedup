@@ -19,7 +19,7 @@ docker run \
     -v $output_path:/opt/result \
     python:3.12.0b1-bullseye \
     python /opt/pipeline/src/move_fq_seq.py \
-        -si /opt/reads/$source \
+        -si /opt/result/$source \
         -di /opt/result/$destination \
         -do /opt/result/$destination_new \
         -dm 1

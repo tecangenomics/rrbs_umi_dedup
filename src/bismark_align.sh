@@ -19,7 +19,7 @@ docker run \
     -v $genome_path:/opt/reference \
     quay.io/biocontainers/bismark:0.24.0--hdfd78af_0 \
     bismark \
-        --genome $genome_path \
-        --output_dir /opt/result/$output_path
+        --genome /opt/reference \
+        --output_dir /opt/result/$output_path \
         -1 /opt/result/$in1 \
         -2 /opt/result/$in2
