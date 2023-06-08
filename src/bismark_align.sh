@@ -1,7 +1,7 @@
 #!/bin/sh
 
 ### DocString ###
-help_string= """
+help_string="""
 This script will use the bismark docker to do:
     alignment
 """

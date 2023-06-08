@@ -1,7 +1,7 @@
 #!/bin/sh
 
 ### DocString ###
-help_string= """
+help_string="""
 This script will use the umi tools docker to extract umis from reads
 """
 

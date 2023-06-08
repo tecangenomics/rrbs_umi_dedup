@@ -1,6 +1,6 @@
 #!/bin/sh
 
-help_string= """
+help_string="""
 This script will trim illumina adapter sequence
 """
 

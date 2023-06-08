@@ -1,7 +1,7 @@
 #!/bin/sh
 
 ### DocString ###
-help_string= """
+help_string="""
 This script will use the python 3.12 docker to move bases (UMIs) from
 one read to another read
 """
@@ -20,7 +20,7 @@ docker run \
     -v $reads_path:/opt/reads \
     -v $output_path:/opt/result \
     python:3.12.0b1-bullseye \
-    python /opt/pipeline/src/shift_bases.sh \
+    python /opt/pipeline/src/move_fq_seq.py \
         -si /opt/reads/$source \
         -so /opt/result/$source_new \
         -do /opt/result/$destination_new
