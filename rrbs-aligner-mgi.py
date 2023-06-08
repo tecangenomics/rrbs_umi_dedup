@@ -273,7 +273,7 @@ def main():
         pull_docker_images()
     # index genome if needed
     if args.index:
-        bismark_index_genome()
+        bismark_index_genome(args.genome)
     # perform analysis on per sample basis
     for r1 in glob.glob(args.reads + '/*R1*'):
         r2 = r1.split('R1')[0] + 'R2' + r1.split('R1')[1]
