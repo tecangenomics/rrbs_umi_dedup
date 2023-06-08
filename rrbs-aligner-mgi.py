@@ -71,10 +71,10 @@ class RRBS_analysis:
         step_1_output = 's1_extract-umi'
         os.makedirs(self.result_path + '/' + step_1_output, exist_ok=True)
         # create new attributes for the class
-        self.re_new = self.__rename_file(step_1_output, self.r2, '_umi-removed.fq')
+        self.r2_new = self.__rename_file(step_1_output, self.r2, '_umi-removed.fq')
         self.umi_fq = self.__rename_file(step_1_output, ''.join(self.r1.split('R1')), '_umi.fq')
         # run command
-        bash_script = ['bash', './src/shift_bases.sh']
+        bash_script = ['bash', self.pipeline_path + '/src/shift_bases.sh']
         mount_directories = [self.pipeline_path, self.result_path, self.read_path]
         docker_inputs = [self.r2, self.umi_fq, self.r2_new]
         result = subprocess.run(bash_script + mount_directories + docker_inputs)
@@ -98,7 +98,7 @@ class RRBS_analysis:
         os.makedirs(self.result_path + '/' + step_2_output, exist_ok=True)
         # do ilmn adapter trimming
         print('\tStarting step 2a: trimming universal adapters')
-        bash_script = ['bash', './src/trim_adapter_ilmn.sh']
+        bash_script = ['bash', self.pipeline_path + '/src/trim_adapter_ilmn.sh']
         mount_directories = [self.read_path, self.result_path]
         docker_inputs = [step_2_output, self.r1, self.r2_new]
         result_trim_ilmn = subprocess.run(bash_script + mount_directories + docker_inputs)
@@ -108,7 +108,7 @@ class RRBS_analysis:
         r2_trim_ilmn = self.__rename_file(step_2_output, self.r2_new, '_val_2.fq')
         # do diversity adapter trimming
         print('\tStarting step2b: trimming diversity sequence')
-        bash_script = ['bash', './src/trim_adapter_diversity.sh']
+        bash_script = ['bash', self.pipeline_path + '/src/trim_adapter_diversity.sh']
         mount_directories = [self.pipeline_path, self.result_path]
         docker_inputs = [r1_trim_ilmn, r2_trim_ilmn]
         result_trim_diverse = subprocess.run(bash_script + mount_directories + docker_inputs)
@@ -134,7 +134,7 @@ class RRBS_analysis:
         os.makedirs(self.result_path + '/' + step_3_output, exist_ok=True)
         # move umis now
         self.r1_umi = self.__rename_file(step_3_output, self.r1_trimmed, '_umi-added.fq')
-        bash_script = ['bash', './src/move_back_umi.sh']
+        bash_script = ['bash', self.pipeline_path + '/src/move_back_umi.sh']
         mount_directories = [self.pipeline_path, self.result_path]
         docker_inputs = [self.umi_fq, self.r1_trimmed, self.r1_umi]
         result = subprocess.run(bash_script + mount_directories + docker_inputs)
@@ -160,7 +160,7 @@ class RRBS_analysis:
         self.r1_umi_extract = self.__rename(step_4_output, self.r1_umi, '_umi-extract.fq')
         self.r2_umi_extract = self.__rename(step_4_output, self.r1_umi, '_umi-extract.fq')
         # run umi extract now
-        bash_script = ['bash', './src/umi_extract.sh']
+        bash_script = ['bash', self.pipeline_path + '/src/umi_extract.sh']
         mount_directories = [self.result_path]
         docker_inputs = [self.r1_umi, self.r2_trimmed, self.r1_umi_extract, self.r2_umi_extract]
         result = subprocess.run(bash_script + mount_directories + docker_inputs)
@@ -184,7 +184,7 @@ class RRBS_analysis:
         os.makedirs(self.result_path + '/' + step_5_output)
         # run bismark alignment
         print('\tStarting step 5a: alignment')
-        bash_script = ['bash', './src/bismark_align.sh']
+        bash_script = ['bash', self.pipeline_path + '/src/bismark_align.sh']
         mount_directories = [self.result_path, self.reference]
         docker_inputs = [step_5_output, self.r1_umi_extract, self.r2_umi_extract]
         result = subprocess.run(bash_script + mount_directories + docker_inputs)
@@ -193,7 +193,7 @@ class RRBS_analysis:
         bam = self.__rename_file(step_5_output, self.r1_umi_extract, '_bismark_bt2_PE.bam')
         # run samtools sort
         print('\tStarting step 5b: sort bam file')
-        bash_script = ['bash', './src/samtools_sort.sh']
+        bash_script = ['bash', self.pipeline_path + '/src/samtools_sort.sh']
         mount_directories = [self.result_path]
         docker_inputs = [bam]
         result = subprocess.run(bash_script + mount_directories + docker_inputs)
@@ -202,7 +202,7 @@ class RRBS_analysis:
         self.bam_sorted = self.__rename_file(step_5_output, bam, '_sorted.bam')
         # run samtools index
         print('\tStarting step 5c: index bam file')
-        bash_script = ['bash', './src/samtools_index.sh']
+        bash_script = ['bash', self.pipeline_path + '/src/samtools_index.sh']
         mount_directories = [self.result_path]
         docker_inputs = [self.bam_sorted]
         result = subprocess.run(bash_script + mount_directories + docker_inputs)
@@ -222,7 +222,7 @@ class RRBS_analysis:
         step_6_output = 's6_deduplicate_bam'
         os.makedirs(self.result_path + '/' + step_6_output)
         # run deduplication
-        bash_script = ['bash', './src/umi_dedup.sh']
+        bash_script = ['bash', self.pipeline_path + '/src/umi_dedup.sh']
         mount_directories = [self.result_path]
         docker_inputs = [step_6_output, self.bam_sorted]
         result = subprocess.run(bash_script + mount_directories + docker_inputs)
