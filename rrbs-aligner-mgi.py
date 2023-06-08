@@ -277,7 +277,7 @@ def main():
     # perform analysis on per sample basis
     for r1 in glob.glob(args.reads + '/*R1*'):
         r2 = r1.split('R1')[0] + 'R2' + r1.split('R1')[1]
-        analysis = RRBS_analysis(r1, r2, args.reference, args.reads, args.out)
+        analysis = RRBS_analysis(r1, r2, args.genome, args.reads, args.out)
         print(analysis.pipeline_status)
     return
 
