@@ -34,6 +34,7 @@ will be found in the subdirectory called "s6_deduplicate_bam"
 
 # Parameters
 **Required**
+```
 -g  The absolute path to the reference genome directory (not the file). \
 -r  The absolute path to the reads directory. 
         Reads are assumed to be paired end.
@@ -41,11 +42,12 @@ will be found in the subdirectory called "s6_deduplicate_bam"
         Read pairs are expected to be differentiated by R1 and R2.
         Read file names are expected to NOT have multiple instance of R1 or R2 in it.
 -o  The absolute path to the output directory where the results will be stored
-
+```
 **Optional**
+```
 --index        Set this flag to index the reference genome with bismark
 --pull_docker  Set this flag to pull the required docker images
-
+```
 # Additional Notes
 Each step in the pipeline will be associated with a bash script that will call the docker command to execute what's needed.
 If a different option is required for a particular step (e.g. changes in parallelization of alignment), please go to the
