@@ -72,7 +72,7 @@ class RRBS_analysis:
         os.makedirs(self.result_path + '/' + step_1_output, exist_ok=True)
         # create new attributes for the class
         self.re_new = self.__rename_file(step_1_output, self.r2, '_umi-removed.fq')
-        self.umi_fq = self.__rename_file(''.join(self.r1.split('R1')), '_umi.fq')
+        self.umi_fq = self.__rename_file(step_1_output, ''.join(self.r1.split('R1')), '_umi.fq')
         # run command
         bash_script = ['bash', './src/shift_bases.sh']
         mount_directories = [self.pipeline_path, self.result_path, self.read_path]
